@@ -121,6 +121,8 @@ class Animator {
         if (this.animated) {
             this.animated = false
             clearInterval(this.interval)
+            cb()
+            console.log("stopping animator")
         }
     }
 }
@@ -187,5 +189,26 @@ class SquareStepMover {
 
     startUpdating(cb : Function) {
         this.curr.startUpdating(cb)
+    }
+}
+
+class Renderer {
+
+    ssm : SquareStepMover = new SquareStepMover()
+    animator : Animator = new Animator()
+
+    render(context : CanvasRenderingContext2D) {
+        this.ssm.draw(context)
+    }
+
+    handleTap(cb : Function) {
+        this.ssm.startUpdating(() => {
+            this.animator.start(() => {
+                cb()
+                this.ssm.update(() => {
+                    this.animator.stop(cb)
+                })
+            })
+        })
     }
 }
