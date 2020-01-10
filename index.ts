@@ -7,7 +7,7 @@ const strokeFactor : number = 90
 const sizeFactor : number = 2.9
 const foreColor : string = "indigo"
 const backColor : string = "#bdbdbd"
-const delay : number = 15
+const delay : number = 50
 class ScaleUtil {
 
     static maxScale(scale : number, i : number, n : number) : number {
@@ -25,15 +25,18 @@ class ScaleUtil {
 
 class DrawingUtil {
 
-    static drawMovingSquare(context : CanvasRenderingContext2D, i : number, w : number, scale : number) {
+    static drawMovingSquare(context : CanvasRenderingContext2D, w : number, scale : number) {
         const gap : number = w / tracks
         const sf : number = ScaleUtil.sinify(scale)
+        const scDiv : number = 1 / tracks
+        const i : number = Math.floor(sf / scDiv)
         const sfi : number = ScaleUtil.divideScale(sf, i, tracks)
         const sfi1 : number = ScaleUtil.divideScale(sfi, 0, 2)
         const sfi2 : number = ScaleUtil.divideScale(sfi, 1, 2)
+        console.log(i)
         context.save()
         context.translate(i * gap, -gap)
-        context.fillRect(gap * sfi2, 0, gap * sfi1 - gap * sfi1, gap)
+        context.fillRect(gap * sfi2, 0, gap * sfi1 - gap * sfi2, gap)
         context.restore()
     }
 
@@ -44,8 +47,7 @@ class DrawingUtil {
         const gap : number = h / (nodes + 1)
         context.save()
         context.translate(0, gap * (i + 1))
-        const scDiv : number = scale / tracks
-        DrawingUtil.drawMovingSquare(context, Math.floor(scale / scDiv), w, scale)
+        DrawingUtil.drawMovingSquare(context, w, scale)
         context.restore()
     }
 }
@@ -149,6 +151,7 @@ class SSMNode {
     }
 
     draw(context : CanvasRenderingContext2D) {
+        console.log("drawing mss node")
         DrawingUtil.drawMSSNode(context, this.i, this.state.scale)
     }
 
