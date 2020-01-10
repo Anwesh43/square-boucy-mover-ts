@@ -1,13 +1,13 @@
 const w : number = window.innerWidth
 const h : number = window.innerHeight
-const scGap : number = 0.02
+const nodes : number = 5
+const tracks : number = 5
+const scGap : number = 0.02 / tracks
 const strokeFactor : number = 90
 const sizeFactor : number = 2.9
 const foreColor : string = "indigo"
 const backColor : string = "#bdbdbd"
-const nodes : number = 5
-const tracks : number = 5
-
+const delay : number = 15
 class ScaleUtil {
 
     static maxScale(scale : number, i : number, n : number) : number {
@@ -101,6 +101,26 @@ class State {
         if (this.dir == 0) {
             this.dir = 1 - 2 * this.prevScale
             cb()
+        }
+    }
+}
+
+class Animator {
+
+    animated : boolean = false
+    interval : number
+
+    start(cb : Function) {
+        if (!this.animated) {
+            this.animated = true
+            this.interval = setInterval(cb, delay)
+        }
+    }
+
+    stop(cb : Function) {
+        if (this.animated) {
+            this.animated = false
+            clearInterval(this.interval)
         }
     }
 }
